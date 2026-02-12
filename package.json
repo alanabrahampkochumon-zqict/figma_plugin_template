@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-        "watch:main": "node scripts/watch.js",
-        "watch:ui": "vite build --watch",
-        "watch": "concurrently \"npm:watch:main\" \"npm:watch:ui\""
+    "watch:main": "node scripts/watch.js",
+    "watch:ui": "vite build --watch",
+    "watch": "concurrently \"npm:watch:main\" \"npm:watch:ui\""
   },
   "dependencies": {
     "react": "^19.2.0",
@@ -15,6 +15,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@figma/eslint-plugin-figma-plugins": "^1.0.0",
     "@figma/plugin-typings": "^1.123.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
