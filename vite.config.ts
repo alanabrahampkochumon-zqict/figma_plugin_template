@@ -1,22 +1,56 @@
 import react from "@vitejs/plugin-react";
-import { readFile, writeFile } from "fs/promises";
+import esbuild from "esbuild";
+import { copyFile, glob } from "fs/promises";
 import { resolve } from "path";
-import { defineConfig } from "vite";
+import { defineConfig, PluginOption } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 
-function build() {
+async function rebuildMain(): Promise<esbuild.BuildContext> {
+    return esbuild.context({
+        entryPoints: [resolve(__dirname, "src/common/main.ts")],
+        bundle: true,
+        platform: "node",
+        target: "es2022",
+        outfile: "dist/main.js",
+        logLevel: "info",
+    });
+}
+
+function watchManifest(): PluginOption {
+    let rebuildCtx: esbuild.BuildContext;
     return {
-        name: "build",
+        name: "watch-and-copy-manifest",
         async buildStart() {
-            const manifest = await readFile(
-                resolve(__dirname, "manifest.json"),
-                "utf-8",
-            );
-            await writeFile(
-                resolve(__dirname, "dist/manifest.json"),
-                manifest,
-                "utf-8",
-            );
+            this.addWatchFile(resolve(__dirname, "manifest.json"));
+            this.addWatchFile(resolve(__dirname, "index.html"));
+            const files = glob("src/**/*.*");
+            for await (const file of files) {
+                this.addWatchFile(file);
+            }
+        },
+        async writeBundle() {
+            try {
+                // Copy the manifest for plugin reload
+                rebuildCtx = await rebuildMain();
+                const tasks = [
+                    rebuildCtx.rebuild(),
+                    copyFile(
+                        resolve(__dirname, "manifest.json"),
+                        resolve(__dirname, "dist/manifest.json"),
+                    ),
+                ];
+                await Promise.all(tasks);
+                console.log(`Manifest copied successfully!`);
+            } catch (err) {
+                if (err instanceof Error)
+                    console.log(
+                        `There was an error copying the manifest file: ${err.message}`,
+                    );
+                else console.log(`There was an unknown error!`);
+            }
+        },
+        async closeBundle() {
+            rebuildCtx && rebuildCtx.dispose();
         },
     };
 }
@@ -29,7 +63,7 @@ export default defineConfig(() => {
                 useRecommendedBuildConfig: false,
                 removeViteModuleLoader: true,
             }),
-            build(),
+            watchManifest(),
         ],
         build: {
             target: "esnext",
@@ -44,7 +78,6 @@ export default defineConfig(() => {
                     ui: resolve(__dirname, "index.html"),
                 },
             },
-            watch: {},
         },
     };
 });

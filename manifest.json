@@ -5,6 +5,6 @@
   ],
   "id": "PluginID",
   "name": "Plugin Name",
-  "main": "dist/main.js",
-  "ui": "dist/index.html"
-} 
+  "main": "main.js",
+  "ui": "index.html"
+}
