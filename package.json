@@ -4,9 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "watch:main": "node scripts/watch.js",
-    "watch:ui": "vite build --watch",
-    "watch": "concurrently \"npm:watch:main\" \"npm:watch:ui\""
+    "watch": "vite build --watch"
   },
   "dependencies": {
     "react": "^19.2.0",
