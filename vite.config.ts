@@ -57,14 +57,7 @@ function watchManifest(): PluginOption {
 
 export default defineConfig(() => {
     return {
-        plugins: [
-            react(),
-            viteSingleFile({
-                useRecommendedBuildConfig: false,
-                removeViteModuleLoader: true,
-            }),
-            watchManifest(),
-        ],
+        plugins: [react(), viteSingleFile(), watchManifest()],
         build: {
             target: "esnext",
             assetsInlineLimit: 100000000,
@@ -73,11 +66,6 @@ export default defineConfig(() => {
             emptyOutDir: false,
             inlineDynamicImports: false,
             outDir: "dist",
-            rollupOptions: {
-                input: {
-                    ui: resolve(__dirname, "index.html"),
-                },
-            },
         },
     };
 });
