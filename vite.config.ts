@@ -4,13 +4,14 @@ import { copyFile, glob } from "fs/promises";
 import { resolve } from "path";
 import { defineConfig, PluginOption } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
+import tsConfig from "./tsconfig.json";
 
 async function rebuildMain(): Promise<esbuild.BuildContext> {
     return esbuild.context({
         entryPoints: [resolve(__dirname, "src/common/main.ts")],
         bundle: true,
         platform: "node",
-        target: "es2022",
+        target: tsConfig.compilerOptions.target,
         outfile: "dist/main.js",
         logLevel: "info",
     });

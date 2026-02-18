@@ -1,13 +1,15 @@
 import type FigmaEvents from "./FigmaEvents";
 
+/**
+ * Class that manages all the events for Figma.
+ * For defining custom events, modify `FigmaEvents` to include appropriate event name and function type.
+ * And use `eventManager.register()` in the main.ts or similar, to attach an event listener. NOTE: Only use this in the files that convert to main.js, which include files imported into main.ts.
+ * And emit event use `eventManager.emit("event_name")` to emit events.
+ */
 class EventManager {
     listeners: Partial<{
         [K in keyof FigmaEvents]: (data: FigmaEvents[K]) => void;
-    }>; // FIXME: Remove this
-
-    constructor() {
-        this.listeners = {};
-    }
+    }> = {};
 
     register<K extends keyof FigmaEvents>(
         eventName: K,
