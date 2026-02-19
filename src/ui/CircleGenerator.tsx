@@ -1,9 +1,20 @@
 import { useState } from "react";
+import { eventManager } from "../common/events/EventManager";
 
 function CircleGenerator() {
     const [radius, setRadius] = useState(12);
     const [circleCount, setCircleCount] = useState(7);
     const [color, setColor] = useState("#1178d8");
+
+    const generateCircle = () => {
+        eventManager.emit("createCircle", {
+            count: circleCount,
+            radius: radius,
+            color: color,
+        });
+        
+        console.log("generating...");
+    };
 
     return (
         <>
@@ -57,7 +68,7 @@ function CircleGenerator() {
                 </div>
             </div>
 
-            <button>Create Circle</button>
+            <button onClick={generateCircle}>Create Circle</button>
         </>
     );
 }

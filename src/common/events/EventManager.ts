@@ -11,6 +11,8 @@ class EventManager {
         [K in keyof FigmaEvents]: (data: FigmaEvents[K]) => void;
     }> = {};
 
+    constructor() {}
+
     register<K extends keyof FigmaEvents>(
         eventName: K,
         handler: (data: FigmaEvents[K]) => void,
@@ -23,13 +25,24 @@ class EventManager {
     }
 
     emit<K extends keyof FigmaEvents>(eventName: K, data: FigmaEvents[K]) {
-        const handler = this.listeners[eventName];
-        if (handler) {
-            (handler as (data: FigmaEvents[K]) => void)(data);
-        } else {
-            console.log(
-                `No listeners registered for ${eventName}. Register the event using "eventManager.register(${eventName}, ...args)".`,
+        if (typeof figma == "undefined") {
+            parent.postMessage(
+                {
+                    pluginMessage: { type: eventName },
+                },
+                "*",
             );
+        } else {
+            // Main Environment
+            console.log(eventName);
+            const handler = this.listeners[eventName];
+            if (handler) {
+                (handler as (data: FigmaEvents[K]) => void)(data);
+            } else {
+                console.log(
+                    `No listeners registered for ${eventName}. Register the event using "eventManager.register(${eventName}, ...args)".`,
+                );
+            }
         }
     }
 }
