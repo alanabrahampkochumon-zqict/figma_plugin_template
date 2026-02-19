@@ -26,15 +26,16 @@ class EventManager {
 
     emit<K extends keyof FigmaEvents>(eventName: K, data: FigmaEvents[K]) {
         if (typeof figma == "undefined") {
+            // Passes the message on to the main thread.
             parent.postMessage(
                 {
-                    pluginMessage: { type: eventName },
+                    pluginMessage: { type: eventName, data: data },
                 },
                 "*",
             );
         } else {
             // Main Environment
-            console.log(eventName);
+            console.log(data);
             const handler = this.listeners[eventName];
             if (handler) {
                 (handler as (data: FigmaEvents[K]) => void)(data);
