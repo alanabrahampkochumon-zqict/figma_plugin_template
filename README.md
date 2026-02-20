@@ -6,7 +6,7 @@ Simple template for creating Figma Plugins using Vite and Typescript.
 
 ## How to run the plugin
 
-1. Clone or fork the repository (template).
+1. Clone the repository or use `Use this template`.
 2. Download and install <a href="https://nodejs.org/" _target="blank">Node.js</a> if you don't already have it installed.
 3. Run `npm i` to install all the packages.
 4. Run `npm run dev` to start the development server.
