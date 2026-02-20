@@ -35,7 +35,6 @@ class EventManager {
             );
         } else {
             // Main Environment
-            console.log(data);
             const handler = this.listeners[eventName];
             if (handler) {
                 (handler as (data: FigmaEvents[K]) => void)(data);
