@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "watch": "vite build --watch"
+    "dev": "vite build --watch"
   },
   "dependencies": {
     "react": "^19.2.0",
