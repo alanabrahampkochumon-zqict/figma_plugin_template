@@ -39,6 +39,8 @@ The current plugin setup includes a custom event manager. To use it:
 
 Keep all logic that uses the `figma.` global object inside the `main.ts` file or its imported modules.
 
+Configure window height, window width and other properties related to window in the `window.config.json` file.
+
 ### Additional Resources
 
 - <a href="https://vite.dev/guide/">Vite Docs</a>
