@@ -8,6 +8,10 @@
 4. Launch <a href="" _target="blank">Figma Desktop app</a>, then Figma `Icon > Plugins > Development > Import Plugin from manifest`
 5. Select the `dist/manifest.json` file. Don't select the `manifest.json` in the root directory.
 
+## Release Build
+
+To run the relase build use `npm run build`
+
 ## Updating plugin attributes.
 
 You can update your plugin attributes in the `manifest.json` file in the root folder. It will get reflect in the manifest.json file in the dist folder as well.

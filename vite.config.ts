@@ -6,7 +6,9 @@ import { defineConfig, PluginOption } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import tsConfig from "./tsconfig.json";
 
-async function rebuildMain(): Promise<esbuild.BuildContext> {
+async function rebuildMain(
+    isProductionBuild: boolean = false,
+): Promise<esbuild.BuildContext> {
     return esbuild.context({
         entryPoints: [resolve(__dirname, "src/common/main.ts")],
         bundle: true,
@@ -14,10 +16,12 @@ async function rebuildMain(): Promise<esbuild.BuildContext> {
         target: tsConfig.compilerOptions.target,
         outfile: "dist/main.js",
         logLevel: "info",
+        minify: isProductionBuild,
+        sourcemap: !isProductionBuild,
     });
 }
 
-function watchManifest(): PluginOption {
+function watchManifest(isProductionBuild: boolean = false): PluginOption {
     let rebuildCtx: esbuild.BuildContext;
     return {
         name: "watch-and-copy-manifest",
@@ -32,7 +36,7 @@ function watchManifest(): PluginOption {
         async writeBundle() {
             try {
                 // Copy the manifest for plugin reload
-                rebuildCtx = await rebuildMain();
+                rebuildCtx = await rebuildMain(isProductionBuild);
                 const tasks = [
                     rebuildCtx.rebuild(),
                     copyFile(
@@ -56,9 +60,11 @@ function watchManifest(): PluginOption {
     };
 }
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
+    const isProductionBuild =
+        command == "build" && !process.argv.includes("--watch");
     return {
-        plugins: [react(), viteSingleFile(), watchManifest()],
+        plugins: [react(), viteSingleFile(), watchManifest(isProductionBuild)],
         build: {
             target: "esnext",
             assetsInlineLimit: 100000000,
@@ -66,6 +72,7 @@ export default defineConfig(() => {
             cssCodeSplit: false,
             emptyOutDir: false,
             inlineDynamicImports: false,
+            minify: isProductionBuild,
             outDir: "dist",
         },
     };
